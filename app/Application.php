@@ -11,10 +11,15 @@ class Application extends BaseApplication
     use BaseApplication\TwigTrait;
     use BaseApplication\UrlGeneratorTrait;
 
-    public function __construct($debug = false)
+    public function __construct()
     {
+        $config = array_replace_recursive(
+            json_decode(file_get_contents(__DIR__ . '/config/config.example.json'), true),
+            json_decode(file_get_contents(__DIR__ . '/config/config.json'), true)
+        );
         parent::__construct([
-            'debug' => $debug
+            'debug'  => $config['debug'],
+            'config' => $config
         ]);
         $this->registerServices();
     }
@@ -30,8 +35,9 @@ class Application extends BaseApplication
             ]
         ]);
         $this->register(new Provider\PDOServiceProvider(), [
-            'pdo.dsn'        => 'mysql:host=localhost;dbname=books',
-            'pdo.username'   => 'root',
+            'pdo.dsn'        => $this['config']['database']['dsn'],
+            'pdo.username'   => $this['config']['database']['username'],
+            'pdo.password'   => $this['config']['database']['password'],
             'pdo.class_name' => 'Flame\\Connection'
         ]);
     }

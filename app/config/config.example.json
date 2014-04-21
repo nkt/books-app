@@ -1,0 +1,8 @@
+{
+  "debug": false,
+  "database": {
+    "dsn": "mysql:host=localhost;dbname=books;charset=utf8",
+    "username": "root",
+    "password": ""
+  }
+}
