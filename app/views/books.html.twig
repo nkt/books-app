@@ -1,0 +1,79 @@
+{% extends "layout.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-9">
+            <h1>Книги</h1>
+
+            <form action="/books" method="POST">
+                <table class="table">
+                    <tr>
+                        <th>Номер</th>
+                        <th>Название</th>
+                        <th>Автор</th>
+                        <th>Стоимость</th>
+                        <th>Количество</th>
+                        <th>Действия</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input class="form-control" type="text" name="name"/></td>
+                        <td>
+                            <select class="form-control" name="author">
+                                {% for author in authors %}
+                                    <option value="{{ author.id }}">{{ author.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" name="price" min="1"/>
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" name="count" min="1"/>
+                        </td>
+                        <td>
+                            <button class="btn btn-success">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% for book in books %}
+                        <tr>
+                            <td>{{ book.id }}</td>
+                            <td>{{ book.name }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.price }} <b>руб</b></td>
+                            <td>{{ book.count }}</td>
+                            <td><a href=""><span class="glyphicon glyphicon-edit"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </form>
+        </div>
+        <div class="col-lg-3">
+            <h1>Авторы</h1>
+
+            <form action="/authors" method="POST">
+                <table class="table">
+                    <tr>
+                        <th>Имя</th>
+                        <th>Действия</th>
+                    </tr>
+                    <tr>
+                        <td><input class="form-control" type="text" name="name"/></td>
+                        <td>
+                            <button class="btn btn-success">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% for author in authors %}
+                        <tr>
+                            <td>{{ author.name }}</td>
+                            <td><a href=""><span class="glyphicon glyphicon-edit"></span></a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </form>
+        </div>
+    </div>
+{% endblock %}

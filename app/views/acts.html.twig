@@ -1,0 +1,33 @@
+{% extends "layout.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <h1>Акты</h1>
+            <table class="table">
+                <tr>
+                    <th>Номер</th>
+                    <th>Причина</th>
+                    <th>Дата</th>
+                    <th>Книги</th>
+                </tr>
+                {% for act in acts %}
+                    <tr>
+                        <td>{{ act.id }}</td>
+                        <td>{{ act.reason }}</td>
+                        <td>{{ act.date|date('d.m.Y') }}</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                {% for book in act.books %}
+                                    <li>
+                                        <b>{{ book.author }}</b>: {{ book.name }}. {{ book.count }}шт ({{ book.price }}
+                                        руб)
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

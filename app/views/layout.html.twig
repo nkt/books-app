@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+                Меню
+            </button>
+            <a class="navbar-brand" href="/">Библиотека</a>
+        </div>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Книги</a></li>
+                <li><a href="/acts">Акты</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+<script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
