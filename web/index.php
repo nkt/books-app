@@ -4,9 +4,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 require __DIR__ . '/../app/Application.php';
 
-$app = new Application(true);
+$app = new Application();
 
-$app->get('/', function () use ($app) {
+$app->get('/', function (Application $app) {
     return $app->redirect('/books');
 });
 
