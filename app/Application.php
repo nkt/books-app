@@ -40,6 +40,10 @@ class Application extends BaseApplication
             'pdo.password'   => $this['config']['database']['password'],
             'pdo.class_name' => 'Flame\\Connection'
         ]);
+        $this->register(new Provider\ServiceControllerServiceProvider());
+        $this->register(new Provider\WebProfilerServiceProvider(), array(
+            'profiler.cache_dir' => __DIR__ . '/cache/profiler',
+        ));
     }
 
     /**

@@ -8,6 +8,7 @@
     "silex/silex": "1.2.*",
     "twig/twig": "1.15.*",
     "nkt/flame": "0.1.*",
-    "nkt/silex-pdo-provider": "1.0.*"
+    "nkt/silex-pdo-provider": "1.0.*",
+    "silex/web-profiler": "*"
   }
 }
