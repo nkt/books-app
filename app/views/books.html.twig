@@ -1,4 +1,7 @@
 {% extends "layout.html.twig" %}
+{% block js %}
+    <script src="/js/books.js"></script>
+{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col-lg-9">
@@ -43,11 +46,18 @@
                             <td>{{ book.author }}</td>
                             <td>{{ book.price }} <b>руб</b></td>
                             <td>{{ book.count }}</td>
-                            <td><a href=""><span class="glyphicon glyphicon-edit"></span></a></td>
+                            <td>
+                                <button class="btn btn-danger btn-sm fire" data-name="{{ book.name }}" data-id="{{ book.id }}" data-count="{{ book.count }}">
+                                    <span class="glyphicon glyphicon-fire"></span>
+                                </button>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
             </form>
+            <hr/>
+            <button id="go-fire" class="btn btn-danger btn-block" style="display: none">Списать книги</button>
+
         </div>
         <div class="col-lg-3">
             <h1>Авторы</h1>

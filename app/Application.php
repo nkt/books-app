@@ -40,23 +40,12 @@ class Application extends BaseApplication
             'pdo.password'   => $this['config']['database']['password'],
             'pdo.class_name' => 'Flame\\Connection'
         ]);
-        $this->register(new Provider\ServiceControllerServiceProvider());
-        $this->register(new Provider\WebProfilerServiceProvider(), array(
-            'profiler.cache_dir' => __DIR__ . '/cache/profiler',
-        ));
-    }
-
-    /**
-     * @param string $prefix
-     *
-     * @return ControllerCollection
-     */
-    public function createController($prefix)
-    {
-        $controller = $this['controllers_factory'];
-        $this->mount($prefix, $controller);
-
-        return $controller;
+        if ($this['debug']) {
+            $this->register(new Provider\ServiceControllerServiceProvider());
+            $this->register(new Provider\WebProfilerServiceProvider(), array(
+                'profiler.cache_dir' => __DIR__ . '/cache/profiler',
+            ));
+        }
     }
 
     /**
