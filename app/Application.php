@@ -34,6 +34,7 @@ class Application extends BaseApplication
                 'auto_reload' => true
             ]
         ]);
+        $this->register(new Provider\SessionServiceProvider());
         $this->register(new Provider\PDOServiceProvider(), [
             'pdo.dsn'        => $this['config']['database']['dsn'],
             'pdo.username'   => $this['config']['database']['username'],
@@ -46,6 +47,11 @@ class Application extends BaseApplication
                 'profiler.cache_dir' => __DIR__ . '/cache/profiler',
             ));
         }
+    }
+
+    public function encodePassword($password, $salt)
+    {
+        return sha1($password . $salt);
     }
 
     /**

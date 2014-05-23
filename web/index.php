@@ -1,14 +1,58 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 require __DIR__ . '/../app/Application.php';
 
 $app = new Application();
 
+$checkAuth = function (Request $request) use ($app) {
+    if (!$request->getSession()->has('user')) {
+        return $app->redirect('/');
+    }
+};
+
 $app->get('/', function (Application $app) {
-    return $app->redirect('/books');
+    return $app->render('index.html.twig');
 });
+
+$app->post('/login', function (Application $app, Request $request) {
+    $conn = $app->getConnection();
+    $query = $conn->prepare('SELECT * FROM users WHERE username = s:username');
+    $user = $query->execute([
+        'username' => $request->get('username')
+    ])->fetch();
+    if (!$user) {
+        throw new AccessDeniedHttpException();
+    }
+    if ($user['password'] != $app->encodePassword($request->get('password'), $user['salt'])) {
+        throw new AccessDeniedHttpException();
+    }
+    $session = $request->getSession();
+    $session->set('user', $user);
+
+    return $app->redirect($app->url('books'));
+})->bind('login');
+
+$app->get('/logout', function (Application $app, Request $request) {
+    $request->getSession()->clear();
+
+    return $app->redirect('/');
+});
+
+$app->post('/register', function (Application $app, Request $request) {
+    $conn = $app->getConnection();
+    $query = $conn->prepare('INSERT INTO users (username, password, salt) VALUES (s:username, s:password, s:salt)');
+    $salt = sha1(uniqid(time()));
+    $query->execute([
+        'username' => $request->get('username'),
+        'password' => $app->encodePassword($request->get('password'), $salt),
+        'salt'     => $salt
+    ]);
+
+    return $app->redirect($app->url('login'));
+})->bind('register');
 
 $app->get('/books', function (Application $app) {
     $conn = $app->getConnection();
@@ -17,7 +61,7 @@ $app->get('/books', function (Application $app) {
         'books'   => $conn->query('SELECT b.*, a.name author FROM books b JOIN authors a ON a.id = b.author_id')->fetchAll(),
         'authors' => $conn->query('SELECT * FROM authors')->fetchAll()
     ]);
-})->bind('books');
+})->bind('books')->before($checkAuth);
 
 $app->post('/books', function (Application $app, Request $request) {
     $query = $app->getConnection()->prepare(
@@ -31,7 +75,7 @@ $app->post('/books', function (Application $app, Request $request) {
     ]);
 
     return $app->redirect('/books');
-});
+})->before($checkAuth);
 
 $app->post('/authors', function (Application $app, Request $request) {
     $query = $app->getConnection()->prepare('INSERT INTO authors (name) VALUES(s:name)');
@@ -40,7 +84,7 @@ $app->post('/authors', function (Application $app, Request $request) {
     ]);
 
     return $app->redirect('/books');
-});
+})->before($checkAuth);
 
 $app->get('/acts', function (Application $app) {
     $conn = $app->getConnection();
@@ -66,7 +110,7 @@ $app->get('/acts', function (Application $app) {
     return $app->render('acts.html.twig', [
         'acts' => $acts
     ]);
-})->bind('acts');
+})->bind('acts')->before($checkAuth);
 
 $app->post('/acts', function (Application $app, Request $request) {
     $conn = $app->getConnection();
@@ -86,6 +130,6 @@ $app->post('/acts', function (Application $app, Request $request) {
     }
 
     return $app->json();
-});
+})->before($checkAuth);
 
 $app->run();
